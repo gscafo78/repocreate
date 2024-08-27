@@ -10,7 +10,7 @@ from mirrorreplicator.repository_manage import RepositoryManage
 
 '''
 @author: Giovanni SCAFETTA
-@version: 0.0.1
+@version: 0.0.2
 @description: This script is realized to clone on line mirrors of a Debian/Ubuntu repository to create your local repository.
 @usage: python3 mirep.py -u <url> -p <protocol> -r <rootpath> -d <distributions> -c <components> -a <architectures> -i <inpath> -t <threads> -v
 @example: python3 mirep.py -u ftp.debian.org/debian -p http -r /home/user/debian -d bookworm bookworm-updates -c main -a amd64 -i debian -t 4 -v
@@ -18,7 +18,7 @@ from mirrorreplicator.repository_manage import RepositoryManage
 '''
 
 
-VERSION = "0.0.1"
+VERSION = "0.0.2"
 FILE_NAME = "repocreate.json"
 PATH = os.path.dirname(os.path.abspath(__file__))
 FILE_PATH = f"{PATH}/{FILE_NAME}"
