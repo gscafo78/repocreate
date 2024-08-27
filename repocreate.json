@@ -1,32 +1,42 @@
 [
     {
-        "protocol": "https",
+        "proto": "https",
+        "url": "security.debian.org",
+        "inpath": "debian-security",
+        "distributions": "bookworm-security",
+        "components": "main contrib non-free non-free-firmware",
+        "architectures": "amd64",
+        "rootpath": "/opt/repository",
+        "active": true
+    },
+    {
+        "proto": "https",
         "url": "deb.debian.org",
         "inpath": "debian",
         "distributions": "bookworm",
-        "components": "main contrib",
+        "components": "main contrib non-free non-free-firmware",
         "architectures": "amd64",
-        "rootpath": "/var/www/html",
-        "active": false
+        "rootpath": "/opt/repository",
+        "active": true
     },
     {
-        "protocol": "http",
+        "proto": "http",
         "url": "archive.ubuntu.com",
         "inpath": "ubuntu",
         "distributions": "noble noble-updates noble-security noble-backports",
         "components": "main multiverse restricted universe",
         "architectures": "amd64",
-        "rootpath": "/var/www/html",
+        "rootpath": "/opt/repository",
         "active": true
     },
     {
-        "protocol": "https",
+        "proto": "https",
         "url": "repo.zabbix.com/zabbix/7.0",
         "inpath": "debian",
         "distributions": "bookworm",
         "components": "main",
         "architectures": "amd64",
-        "rootpath": "/var/www/html",
+        "rootpath": "/opt/repository",
         "active": true
     }
 ]

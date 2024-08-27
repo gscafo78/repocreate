@@ -16,7 +16,13 @@ class RepositoryManage:
       link_list = []
       futures = []
       with ThreadPoolExecutor(max_workers=self.args.threads) as executor:
+              
+          logging.debug(f"Starting mirror repository for {self.args.url}")
+          
+          logging.debug(f"Starting mirror distributions for {self.args.distributions}")
+
           for distribution in self.args.distributions:
+              logging.debug(f"Starting mirror distribution for {distribution}")
               for cert in ["InRelease", "Release", "Release.gpg"]:
                   common_path = f"{self.args.url}/{self.args.inpath}/dists/{distribution}/{cert}"
                   futures.append(executor.submit(

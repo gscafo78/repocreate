@@ -8,3 +8,4 @@ class Logger:
           level=level,
           format='%(asctime)s - %(levelname)s - %(message)s',
       )
+

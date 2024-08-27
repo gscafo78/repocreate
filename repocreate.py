@@ -3,309 +3,185 @@
 import json
 import os
 import argparse
-from mirrorreplicator import Logger
 import logging
+from mirrorreplicator.repository_manage import RepositoryManage
 
-
-'''
-@author: Giovanni SCAFETTA
-@version: 0.0.1
-@description: This script is realized to clone an on line mirror of a Debian like repositories to create your local repository.
-@usage: python3 
-@example: python3 
-@license: GLPv3
-'''
 VERSION = "0.0.1"
+FILE_NAME = "repocreate.json"
+PATH = "/opt/github/03_Script/Python/repocreate"
+FILE_PATH = f"{PATH}/{FILE_NAME}"
 
-file_name = "repocreate.json"
-path = "/opt/github/03_Script/Python/repocreate"
-file_path =f"{path}/{file_name}"
-
+def setup_logging(verbose):
+  logging.basicConfig(level=logging.DEBUG if verbose else logging.INFO)
 
 def accept(question, default_active='n'):
   while True:
-    if default_active == 'n':
-        active_input = input(f"{question} (y/N)? ").strip().lower()
-    elif default_active == 'y':
-        active_input = input(f"{question} (Y/n)? ").strip().lower()
-
-    if active_input.lower() in ['y', 'n', '']:
-        if active_input == '':
-            active_input = default_active
-        break
-    else: 
-        print("Invalid input. Put 'y' or 'n'.")
-
-  if active_input == 'y':
-    return True
-  else:
-    return False
-
-
-#   # Validate the 'active' input with a default value
-#   while True:
-#       active_ = input(f"Active (Y/n) [{default_active}]? ").strip() or default_active
-#       if active_.lower() in ['y', 'n']:
-#           break
-#       else:
-#           print("Invalid input. Please enter 'y', 'Y', 'n', or 'N'.")
-
-#   active = active_.lower() == 'y'
-
+      active_input = input(f"{question} ({'Y/n' if default_active == 'y' else 'y/N'})? ").strip().lower()
+      if active_input in ['y', 'n', '']:
+          return active_input == 'y' or (active_input == '' and default_active == 'y')
+      print("Invalid input. Please enter 'y' or 'n'.")
 
 def collect_data(data=None):
-  
-  if data is None:
-    # Prompt the user for each piece of data
-    protocol = input("Enter the URL protocol (http/https): ")
-    url = input("Enter the URL (deb.debian.org): ")
-    inpath = input("Enter the inpath: ")
-    distributions = input("Enter the distributions (bookworm/bullseye): ")
-    components = input("Enter the components (main contrib non-free): ")
-    architectures = input("Enter the architectures (amd64 i386 arm64 armel armhf ppc64el s390x): ")
-    rootpath = input("Enter the rootpath (/var/www/html): ")
-    # Validate the 'active' input
-    while True:
-        active_ = input("Active (Y/n)? ").strip()
-        if active_ == '':
-            active_ = 'y'  # Set default value
-        if active_.lower() in ['y', 'n']:
-            break
-        else:
-            print("Invalid input. Please enter 'y', 'Y', 'n', or 'N'.")
-
-    if active_ == 'y':
-        active = True
-    else:
-        active = False
-
-  else:
-    
-    # Prompt the user for each piece of data, allowing for default values
-    protocol = input(f"Enter the URL protocol (http/https) [{data['protocol']}]: ") or data['protocol']
-    url = input(f"Enter the URL [{data['url']}]: ") or data['url']
-    inpath = input(f"Enter the inpath [{data['inpath']}]: ") or data['inpath']
-    distributions = input(f"Enter the distributions (bookworm/bullseye) [{data['distributions']}]: ") or data['distributions']
-    components = input(f"Enter the components (main contrib non-free) [{data['components']}]: ") or data['components']
-    architectures = input(f"Enter the architectures (amd64 i386 arm64 armel armhf ppc64el s390x) [{data['architectures']}]: ") or data['architectures']
-    rootpath = input(f"Enter the rootpath [{data['rootpath']}]: ") or data['rootpath']
-    # Validate the 'active' input with a default value
-    while True:
-        # Convert the boolean to 'Y' or 'N' for the prompt
-        default_active = 'Y' if data['active'] else 'N'
-        
-        # Prompt the user, using the string representation of the boolean
-        active_ = input(f"Active (Y/n) [{default_active}]? ").strip().upper() or default_active
-        
-        # Check if the input is valid
-        if active_ in ['Y', 'N']:
-            break
-        else:
-            print("Invalid input. Please enter 'Y' or 'N'.")
-
-    # Convert the input back to a boolean
-    active = active_ == 'Y'
-
-  # Store the data in a dictionary
-
-  data = {
-      "protocol": protocol,
-      "url": url,
-      "inpath": inpath,
-      "distributions": distributions,
-      "components": components,
-      "architectures": architectures,
-      "rootpath": rootpath,
-      "active": active
+  prompts = {
+      "proto": "Enter the URL protocol (http/https)",
+      "url": "Enter the URL (deb.debian.org)",
+      "inpath": "Enter the inpath",
+      "distributions": "Enter the distributions (bookworm/bullseye)",
+      "components": "Enter the components (main contrib non-free)",
+      "architectures": "Enter the architectures (amd64 i386 arm64 armel armhf ppc64el s390x)",
+      "rootpath": "Enter the rootpath (/var/www/html)",
+      "active": "Active (Y/n)"
   }
-
+  if data is None:
+      data = {}
+  for key, prompt in prompts.items():
+      default = data.get(key, '')
+      if key == "active":
+          data[key] = accept(prompt, 'y' if default else 'n',)
+          logging.debug("Reading JSON")
+      else:
+          data[key] = input(f"{prompt} [{default}]: ").strip() or default
   return data
 
-
 def read_json(file_path):
-  # Read the existing data from the JSON file
   if os.path.exists(file_path):
       with open(file_path, 'r') as file:
           try:
+              logging.debug("Reading JSON list file...")
               return json.load(file)
           except json.JSONDecodeError:
               return []
   return []
 
 def write_to_json(file_path, data):
-  # Write the list of dictionaries to a JSON file
   with open(file_path, 'w') as file:
       json.dump(data, file, indent=4)
 
-# def modify_dictionary(data, index, new_dict):
-#   if 0 <= index < len(data):
-#       data[index] = new_dict
-#   else:
-#       raise IndexError("Index out of range")
-
-
 def add_data(file_path):
-       # Read existing data
-    existing_data = read_json(file_path)
-
-    # Collect new data from the user
-    new_data = collect_data()
-
-    # Append the new data to the existing data
-    existing_data.append(new_data)
-
-    # Write the updated data to the JSON file
-    write_to_json(file_path, existing_data)
-
-    print(f"Data has been written to {file_path}")
-
-
-
+  existing_data = read_json(file_path)
+  new_data = collect_data()
+  existing_data.append(new_data)
+  write_to_json(file_path, existing_data)
+  print(f"Data has been written to {file_path}")
 
 def modify_dictionary(data, index, new_dict=None):
   if 0 <= index < len(data):
       if new_dict is not None:
-          # Update the dictionary at the specified index
           data[index] = new_dict
       else:
-          # Remove the dictionary at the specified index
           data.pop(index)
   else:
       raise IndexError("Index out of range")
-  
   return data
 
-
 def list_data(file_path):
-  # Read the existing data from the JSON file
   existing_data = read_json(file_path)
-  # Print the list of dictionaries
   for index, data in enumerate(existing_data, start=1):
-    print(f"Number: {index}")
-    for key, value in data.items():
-        print(f"{key}: {value}")
-    print("="*40)
-    print()
+      print(f"Number: {index}")
+      for key, value in data.items():
+          print(f"{key}: {value}")
+      print("="*40)
 
 def list_url(file_path):
-  # Read the existing data from the JSON file
   existing_data = read_json(file_path)
-  # Determine the width for the index based on the number of entries
   index_width = len(str(len(existing_data)))
-  # Print the list of URLs with improved tabulation
   for index, data in enumerate(existing_data, start=1):
       if 'url' in data:
           print(f"[{index:>{index_width}}]: {data['url']}")
-  print()
-  
-  # Prompt the user to select a number
   while True:
       try:
-          user_input = int(input(f"Select a number between 1 and {index}: "))
-          if 1 <= user_input <= index:
-              break  # Valid input, exit the loop
-          else:
-              print(f"Please enter a number between 1 and {index}.")
+          user_input = int(input(f"Select a number between 1 and {len(existing_data)}: "))
+          if 1 <= user_input <= len(existing_data):
+              break
+          print(f"Please enter a number between 1 and {len(existing_data)}.")
       except ValueError:
           print("Invalid input. Please enter a valid number.")
-  
-  # Process the validated input
   selected_data = existing_data[user_input - 1]
   print(f"You selected: {selected_data['url']}")
-  # Return the selected data and its index
   return selected_data, user_input - 1
 
-
-def load_json_by_number(file_path, number):
-  """
-  Load a JSON object from a list based on the given number.
-
-  :param file_path: Path to the JSON file.
-  :param number: The number corresponding to the index of the JSON object to load.
-  :return: The JSON object at the specified index, or None if the index is out of range.
-  """
-  # Read the existing data from the JSON file
-  existing_data = read_json(file_path)
-  
-  # Check if the number is within the valid range
-  if 1 <= number <= len(existing_data):
-      # Return the JSON object at the specified index (adjusting for zero-based index)
-      return existing_data[number - 1]
-  else:
-      print(f"Error: Number {number} is out of range. Please select a number between 1 and {len(existing_data)}.")
-      return None
-
-
 def edit_data(file_path):
-   # Get the selected data from the list_url function
-    existing_data, index_data = list_url(file_path)
-    selected_data = collect_data(existing_data)
-  
-    if selected_data is not None:
-        logging.debug(f"Loaded JSON object: {selected_data} at index {index_data}")
-        existing_data = modify_dictionary(existing_data, index_data, selected_data)
-        write_to_json(file_path, existing_data)
-
-
-    else:
-        logging.debug(f"no data found")
+  selected_data, index_data = list_url(file_path)
+  updated_data = collect_data(selected_data)
+  existing_data = read_json(file_path)
+  modify_dictionary(existing_data, index_data, updated_data)
+  write_to_json(file_path, existing_data)
 
 def remove_data(file_path):
-    print("Please, secelt the repository to remove")
-    # Get the selected data from the list_url function
-    selected_data, index_data = list_url(file_path)
-    
-    if accept(f"Are you sure to remove repository n° {index_data + 1} ?", 'n'):
-        existing_data = read_json(file_path)
-        existing_data = modify_dictionary(existing_data, index_data)
-        # Write the updated data to the JSON file
-        write_to_json(file_path, existing_data)
+  print("Please, select the repository to remove")
+  selected_data, index_data = list_url(file_path)
+  if accept(f"Are you sure to remove repository n° {index_data + 1} ?", 'n'):
+      existing_data = read_json(file_path)
+      modify_dictionary(existing_data, index_data)
+      write_to_json(file_path, existing_data)
+      print(f"Data has been written to {file_path}")
 
-        print(f"Data has been written to {file_path}")
 
+def parse_json_to_args(json_data, verbose=False):
+
+  # Remove the "active" key if it exists
+  json_data.pop("active", None)
+  
+  if isinstance(json_data["distributions"], str):
+     json_data["distributions"] = json_data["distributions"].split()
+
+  if isinstance(json_data["components"], str):
+     json_data["components"] = json_data["components"].split()
+
+  if isinstance(json_data["architectures"], str):
+     json_data["architectures"] = json_data["architectures"].split()
+
+  json_data["verbose"] = verbose
+  json_data["threads"] = 5
+  json_data["remove"] = False
+
+  # Convert the dictionary to an argparse.Namespace object
+  args = argparse.Namespace(**json_data)
+  return args
+
+
+
+def run_mirror(file_path, verbose=False):
+   logging.debug("Starting the mirroring process...")
+   repo_list = read_json(file_path)
+   for repo in repo_list:
+       if repo['active']:
+           logging.debug(f"Starting mirroring for {repo['url']}")
+           args_=parse_json_to_args(repo, verbose)
+           logging.debug(args_)
+           mirror = RepositoryManage(args_)
+           mirror.mirror_repository()
+
+
+           
+   return
 
 def main():
-  # Set up argument parser with a description of the script
   parser = argparse.ArgumentParser(description="Mirror Debian like repositories.")
-  
-  # Create a mutually exclusive group
   group = parser.add_mutually_exclusive_group()
-  
-  # Define mutually exclusive command-line arguments
   group.add_argument("--add", action='store_true', help="Add repositories in the database")
   group.add_argument("--remove", action='store_true', help="Remove repositories in the database")
   group.add_argument("--edit", action='store_true', help="Edit repositories in the database")
-  group.add_argument("--list", action='store_true', help="show repositories in the database")
+  group.add_argument("--list", action='store_true', help="Show repositories in the database")
   group.add_argument("--run", action='store_true', help="Run the repositories mirroring")
-  
-  # Define other command-line arguments
   parser.add_argument("--verbose", action='store_true', help="Verbose mode")
-  parser.add_argument("--version", action='version', version="%(prog)s {VERSION}")
-  
-  try:
-      # Parse the command-line arguments
-      args = parser.parse_args()
-  except SystemExit as e:
-      # Handle missing or invalid arguments
-      print("Error: Missing or invalid arguments.")
-      parser.print_help()
-      return
-  
-  Logger.setup_logging(args.verbose)
-  
-  if args.add :
-    add_data(file_path)
+  parser.add_argument("--version", action='version', version=f"%(prog)s {VERSION}")
 
-  if args.list:
-    list_data(file_path)
- 
-  if args.edit:
-    edit_data(file_path)
+  args = parser.parse_args()
+  setup_logging(args.verbose)
 
-  if args.remove:
-    remove_data(file_path)
+  actions = {
+      "add": add_data,
+      "list": list_data,
+      "edit": edit_data,
+      "remove": remove_data,
+      "run": lambda file_path: run_mirror(file_path, args.verbose, )
+  }
 
-
+  for action, func in actions.items():
+      if getattr(args, action):
+          func(FILE_PATH)
+          break
 
 if __name__ == "__main__":
   main()
