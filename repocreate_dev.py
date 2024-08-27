@@ -185,6 +185,12 @@ class CLIHandler:
 
   def execute(self, file_path):
       args = self.parser.parse_args()
+
+      # Check if no arguments are passed
+      if not any(vars(args).values()):
+          self.parser.print_help()
+          return
+
       Utilities.setup_logging(args.verbose)
 
       repo_manager = RepositoryManager(file_path)
@@ -202,7 +208,6 @@ class CLIHandler:
           if getattr(args, action):
               func()
               break
-
 def main():
   cli_handler = CLIHandler()
   cli_handler.execute(FILE_PATH)
