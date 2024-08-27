@@ -1,0 +1,22 @@
+[
+    {
+        "protocol": "https",
+        "url": "deb.debian.org",
+        "inpath": "debian",
+        "distributions": "bookworm",
+        "components": "main contrib",
+        "architectures": "amd64",
+        "rootpath": "/var/www/html",
+        "active": true
+    },
+    {
+        "protocol": "http",
+        "url": "archive.ubuntu.com",
+        "inpath": "ubuntu",
+        "distributions": "noble noble-updates noble-security noble-backports",
+        "components": "main multiverse restricted universe",
+        "architectures": "amd64",
+        "rootpath": "/var/www/html",
+        "active": true
+    }
+]
