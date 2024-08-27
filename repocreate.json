@@ -7,7 +7,7 @@
         "components": "main contrib",
         "architectures": "amd64",
         "rootpath": "/var/www/html",
-        "active": true
+        "active": false
     },
     {
         "protocol": "http",
@@ -15,6 +15,16 @@
         "inpath": "ubuntu",
         "distributions": "noble noble-updates noble-security noble-backports",
         "components": "main multiverse restricted universe",
+        "architectures": "amd64",
+        "rootpath": "/var/www/html",
+        "active": true
+    },
+    {
+        "protocol": "https",
+        "url": "repo.zabbix.com/zabbix/7.0",
+        "inpath": "debian",
+        "distributions": "bookworm",
+        "components": "main",
         "architectures": "amd64",
         "rootpath": "/var/www/html",
         "active": true

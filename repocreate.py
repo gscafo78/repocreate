@@ -22,6 +22,36 @@ path = "/opt/github/03_Script/Python/repocreate"
 file_path =f"{path}/{file_name}"
 
 
+def accept(question, default_active='n'):
+  while True:
+    if default_active == 'n':
+        active_input = input(f"{question} (y/N)? ").strip().lower()
+    elif default_active == 'y':
+        active_input = input(f"{question} (Y/n)? ").strip().lower()
+
+    if active_input.lower() in ['y', 'n', '']:
+        if active_input == '':
+            active_input = default_active
+        break
+    else: 
+        print("Invalid input. Put 'y' or 'n'.")
+
+  if active_input == 'y':
+    return True
+  else:
+    return False
+
+
+#   # Validate the 'active' input with a default value
+#   while True:
+#       active_ = input(f"Active (Y/n) [{default_active}]? ").strip() or default_active
+#       if active_.lower() in ['y', 'n']:
+#           break
+#       else:
+#           print("Invalid input. Please enter 'y', 'Y', 'n', or 'N'.")
+
+#   active = active_.lower() == 'y'
+
 
 def collect_data(data=None):
   
@@ -107,6 +137,13 @@ def write_to_json(file_path, data):
   with open(file_path, 'w') as file:
       json.dump(data, file, indent=4)
 
+# def modify_dictionary(data, index, new_dict):
+#   if 0 <= index < len(data):
+#       data[index] = new_dict
+#   else:
+#       raise IndexError("Index out of range")
+
+
 def add_data(file_path):
        # Read existing data
     existing_data = read_json(file_path)
@@ -121,6 +158,22 @@ def add_data(file_path):
     write_to_json(file_path, existing_data)
 
     print(f"Data has been written to {file_path}")
+
+
+
+
+def modify_dictionary(data, index, new_dict=None):
+  if 0 <= index < len(data):
+      if new_dict is not None:
+          # Update the dictionary at the specified index
+          data[index] = new_dict
+      else:
+          # Remove the dictionary at the specified index
+          data.pop(index)
+  else:
+      raise IndexError("Index out of range")
+  
+  return data
 
 
 def list_data(file_path):
@@ -183,6 +236,34 @@ def load_json_by_number(file_path, number):
       return None
 
 
+def edit_data(file_path):
+   # Get the selected data from the list_url function
+    existing_data, index_data = list_url(file_path)
+    selected_data = collect_data(existing_data)
+  
+    if selected_data is not None:
+        logging.debug(f"Loaded JSON object: {selected_data} at index {index_data}")
+        existing_data = modify_dictionary(existing_data, index_data, selected_data)
+        write_to_json(file_path, existing_data)
+
+
+    else:
+        logging.debug(f"no data found")
+
+def remove_data(file_path):
+    print("Please, secelt the repository to remove")
+    # Get the selected data from the list_url function
+    selected_data, index_data = list_url(file_path)
+    
+    if accept(f"Are you sure to remove repository n° {index_data + 1} ?", 'n'):
+        existing_data = read_json(file_path)
+        existing_data = modify_dictionary(existing_data, index_data)
+        # Write the updated data to the JSON file
+        write_to_json(file_path, existing_data)
+
+        print(f"Data has been written to {file_path}")
+
+
 def main():
   # Set up argument parser with a description of the script
   parser = argparse.ArgumentParser(description="Mirror Debian like repositories.")
@@ -192,7 +273,7 @@ def main():
   
   # Define mutually exclusive command-line arguments
   group.add_argument("--add", action='store_true', help="Add repositories in the database")
-  group.add_argument("--del", action='store_true', help="Remove repositories in the database")
+  group.add_argument("--remove", action='store_true', help="Remove repositories in the database")
   group.add_argument("--edit", action='store_true', help="Edit repositories in the database")
   group.add_argument("--list", action='store_true', help="show repositories in the database")
   group.add_argument("--run", action='store_true', help="Run the repositories mirroring")
@@ -219,12 +300,12 @@ def main():
     list_data(file_path)
  
   if args.edit:
-    # Get the selected data from the list_url function
-    selected_data, index_data = list_url(file_path)
-    selected_data = collect_data(selected_data)
-  
-    if selected_data is not None:
-        logging.debug(f"Loaded JSON object: {selected_data} at index {index_data}")
+    edit_data(file_path)
+
+  if args.remove:
+    remove_data(file_path)
+
+
 
 if __name__ == "__main__":
   main()
