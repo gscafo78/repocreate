@@ -19,7 +19,7 @@ from mirrorreplicator.repository_manage import RepositoryManage
 
 VERSION = "0.0.1"
 FILE_NAME = "repocreate.json"
-PATH = "/opt/github/03_Script/Python/repocreate"
+PATH = os.path.dirname(os.path.abspath(__file__))
 FILE_PATH = f"{PATH}/{FILE_NAME}"
 
 class Utilities:
