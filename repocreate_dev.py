@@ -4,6 +4,7 @@ import json
 import os
 import argparse
 import logging
+import sys
 from mirrorreplicator.repository_manage import RepositoryManage
 
 
@@ -209,8 +210,14 @@ class CLIHandler:
               func()
               break
 def main():
-  cli_handler = CLIHandler()
-  cli_handler.execute(FILE_PATH)
+  try:
+    cli_handler = CLIHandler()
+    cli_handler.execute(FILE_PATH)
+  except KeyboardInterrupt:
+        # Handle Ctrl+C gracefully
+        print("\nOperation cancelled by user.")
+        sys.exit(0)
+
 
 if __name__ == "__main__":
   main()
