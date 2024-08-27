@@ -64,15 +64,20 @@ class RepositoryManager:
       self.file_path = file_path
 
   def read_json(self):
-      if os.path.exists(self.file_path):
-          with open(self.file_path, 'r') as file:
-              try:
-                  logging.debug("Reading JSON list file...")
-                  return json.load(file)
-              except json.JSONDecodeError:
-                  return []
-      return []
+      if not os.path.exists(self.file_path):
+          logging.error(f"Error: The file '{self.file_path}' does not exist.")
+          sys.exit(1)  # Exit the program with a non-zero status to indicate an error
 
+      with open(self.file_path, 'r') as file:
+          try:
+              logging.debug("Reading JSON list file...")
+              return json.load(file)
+          except json.JSONDecodeError:
+              logging.error("Error: Failed to decode JSON. The file may be corrupted.")
+              sys.exit(1)  # Exit the program if JSON decoding fails
+
+      return []
+  
   def write_to_json(self, data):
       with open(self.file_path, 'w') as file:
           json.dump(data, file, indent=4)
@@ -209,15 +214,14 @@ class CLIHandler:
           if getattr(args, action):
               func()
               break
-def main():
-  try:
-    cli_handler = CLIHandler()
-    cli_handler.execute(FILE_PATH)
-  except KeyboardInterrupt:
-        # Handle Ctrl+C gracefully
-        print("\nOperation cancelled by user.")
-        sys.exit(0)
 
+def main():
+  cli_handler = CLIHandler()
+  try:
+      cli_handler.execute(FILE_PATH)
+  except KeyboardInterrupt:
+      print("\nOperation cancelled by user. Exiting gracefully.")
+      exit(0)
 
 if __name__ == "__main__":
   main()
