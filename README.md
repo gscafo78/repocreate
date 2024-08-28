@@ -1,3 +1,5 @@
+<img src="https://github.com/gscafo78/mirep/blob/main/img/mirrorreplicator.jpeg" alt="Mirror Replicator Logo" width="200" height="200">
+
 # Repository Creator
 
 Repository Creator is a script designed to download multiple Debian-like repositories, such as `deb.debian.org` and `archive.ubuntu.com`. It utilizes a JSON file to act as a database for storing the list of repositories.
@@ -8,10 +10,38 @@ To use the Repository Creator script, follow these steps:
 
 1. Ensure you have Python installed on your system.
 2. Prepare the JSON file with the list of repositories you wish to download.
-   1. python3 repocreate.py --list to list the repositories
-   2. python3 repocreate.py --add to add a repository
 3. Run the script using the following command:
-   1. python3 repocreate.py --run
+```bash
+python3 repocreate.py --run
+```
+
+```bash
+$ python3 repocreate.py --help
+
+usage: repocreate [-h] [--add | --remove | --edit | --list | --run] [--verbose] [--version]
+
+Mirror Debian like repositories.
+
+options:
+  -h, --help  show this help message and exit
+  --add       Add repositories in the database
+  --remove    Remove repositories in the database
+  --edit      Edit repositories in the database
+  --list      Show repositories in the database
+  --run       Run the repositories mirroring
+  --verbose   Verbose mode
+  --version   show program's version number and exit
+
+```
+
+
+### Installation
+
+```bash
+git clone https://github.com/gscafo78/repocreate.git
+cd repocreate
+pip install -r requirements.txt
+```
 
 ### JSON File Description
 
@@ -25,10 +55,11 @@ The JSON file should contain a list of repositories in the following format:
     "distributions": "bookworm",
     "components": "main contrib non-free non-free-firmware",
     "architectures": "amd64",
-    "rootpath": "/opt/autofs/mirrorqnap/repository",
+    "rootpath": "/your/folder/for/repository",
     "active": true
 }
 ```
+
 
 ## Additional Information
 
