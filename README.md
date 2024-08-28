@@ -1,4 +1,4 @@
-<img src="https://github.com/gscafo78/mirep/blob/main/img/mirrorreplicator.jpeg" alt="Mirror Replicator Logo" width="200" height="200">
+<img src="https://github.com/gscafo78/repocreate/blob/main/img/RepositoryCreator.jpeg" alt="Repository Creator Logo" width="200" height="200">
 
 # Repository Creator
 
