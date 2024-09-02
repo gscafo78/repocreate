@@ -6,7 +6,7 @@
         "distributions": "bookworm-security",
         "components": "main contrib non-free non-free-firmware",
         "architectures": "amd64",
-        "rootpath": "/opt/autofs/mirrorqnap/repository",
+        "rootpath": "/your/folder/for/repository",
         "active": true
     },
     {
@@ -16,7 +16,7 @@
         "distributions": "bookworm",
         "components": "main contrib non-free non-free-firmware",
         "architectures": "amd64",
-        "rootpath": "/opt/autofs/mirrorqnap/repository",
+        "rootpath": "/your/folder/for/repository",
         "active": true
     },
     {
@@ -26,37 +26,7 @@
         "distributions": "noble noble-updates noble-security noble-backports jammy jammy-updates jammy-security jammy-backports",
         "components": "main multiverse restricted universe",
         "architectures": "amd64",
-        "rootpath": "/opt/autofs/mirrorqnap/repository",
-        "active": true
-    },
-    {
-        "proto": "https",
-        "url": "repo.zabbix.com/zabbix/7.0",
-        "inpath": "debian",
-        "distributions": "bookworm",
-        "components": "main",
-        "architectures": "amd64",
-        "rootpath": "/opt/autofs/mirrorqnap/repository",
-        "active": true
-    },
-    {
-        "proto": "https",
-        "url": "download.docker.com",
-        "inpath": "linux/debian",
-        "distributions": "bookworm",
-        "components": "stable",
-        "architectures": "amd64",
-        "rootpath": "/opt/autofs/mirrorqnap/repository",
-        "active": true
-    },
-    {
-        "proto": "https",
-        "url": "packages.microsoft.com",
-        "inpath": "repos/microsoft-debian-bookworm-prod",
-        "distributions": "bookworm",
-        "components": "main",
-        "architectures": "amd64",
-        "rootpath": "/opt/autofs/mirrorqnap/repository",
+        "rootpath": "/your/folder/for/repository",
         "active": true
     }
 ]
