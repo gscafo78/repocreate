@@ -24,7 +24,7 @@ python3 repocreate.py --run
 ```bash
 $ python3 repocreate.py --help
 
-usage: repocreate [-h] [--add | --remove | --edit | --list | --run] [--verbose] [--version]
+usage: repocreate [-h] [--add | --remove | --edit | --list | --run] [ -- nochk] [--verbose] [--version]
 
 Mirror Debian like repositories.
 
@@ -35,6 +35,7 @@ options:
   --edit      Edit repositories in the database
   --list      Show repositories in the database
   --run       Run the repositories mirroring
+  --nochk     No SHA256 check for existing files
   --verbose   Verbose mode
   --version   show program's version number and exit
 

@@ -73,14 +73,18 @@ class Downloader:
           logging.debug(f"Created directory: {folder}")
 
       file_name = os.path.basename(full_path)
-      if os.path.exists(full_path) and hash_string is not None:
-    #   if os.path.exists(full_path) and not overwrite:
-          if Downloader.verify_file_hash(full_path, hash_string):
+      
+      if os.path.exists(full_path) and hash_string != "True":
+          if hash_string is None:
             logging.debug(f"File '{file_name}' already exists. Skipping download.")
             self.skipped_count += 1  # Increment skipped count
             return
-          elif hash_string != "True" :
-              logging.info(f"File '{file_name}' already exists but hash does not match. Overwriting.")
+          if Downloader.verify_file_hash(full_path, hash_string):
+            logging.debug(f"Check HASH of File '{file_name}' ok. Skipping download.")
+            self.skipped_count += 1  # Increment skipped count
+            return
+          else:
+              logging.info(f"Check HASH of File '{file_name}' does not match. Overwriting.")
 
       try:
           # Request the file from the URL

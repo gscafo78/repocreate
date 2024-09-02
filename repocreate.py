@@ -10,13 +10,13 @@ from mirrorreplicator.repository_manage import RepositoryManage
 
 '''
 @author: Giovanni SCAFETTA
-@version: 0.0.4
+@version: 0.0.5
 @description: This script is realized to clone on line mirrors of a Debian/Ubuntu repository to create your local repository.
 @license: GLPv3
 '''
 
 
-VERSION = "0.0.4"
+VERSION = "0.0.5"
 FILE_NAME = "repocreate.json"
 PATH = os.path.dirname(os.path.abspath(__file__))
 FILE_PATH = f"{PATH}/{FILE_NAME}"
@@ -140,9 +140,10 @@ class RepositoryManager:
           print(f"Data has been written to {self.file_path}")
 
 class MirrorRunner:
-  def __init__(self, file_path, verbose=False):
+  def __init__(self, file_path, verbose=False, nochk=False):
       self.file_path = file_path
       self.verbose = verbose
+      self.nochk = nochk
 
   def parse_json_to_args(self, json_data):
       json_data.pop("active", None)
@@ -159,7 +160,7 @@ class MirrorRunner:
       json_data["verbose"] = self.verbose
       json_data["threads"] = 5
       json_data["remove"] = False
-      json_data["hash"] = True
+      json_data["hash"] = not self.nochk
 
 
       args = argparse.Namespace(**json_data)
@@ -186,6 +187,7 @@ class CLIHandler:
       self.group.add_argument("--edit", action='store_true', help="Edit repositories in the database")
       self.group.add_argument("--list", action='store_true', help="Show repositories in the database")
       self.group.add_argument("--run", action='store_true', help="Run the repositories mirroring")
+      self.parser.add_argument("--nochk", action='store_true', help="No SHA256 check for existing files")
       self.parser.add_argument("--verbose", action='store_true', help="Verbose mode")
       self.parser.add_argument("--version", action='version', version=f"%(prog)s {VERSION}")
 
@@ -200,7 +202,7 @@ class CLIHandler:
       Utilities.setup_logging(args.verbose)
 
       repo_manager = RepositoryManager(file_path)
-      mirror_runner = MirrorRunner(file_path, args.verbose)
+      mirror_runner = MirrorRunner(file_path, args.verbose, args.nochk)
 
       actions = {
           "add": repo_manager.add_data,
