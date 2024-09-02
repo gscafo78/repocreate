@@ -84,7 +84,7 @@ class Downloader:
             self.skipped_count += 1  # Increment skipped count
             return
           else:
-              logging.info(f"Check HASH of File '{file_name}' does not match. Overwriting.")
+              logging.info(f"Check HASH of File '{file_name}' already exists but hash does not match. Overwriting.")
 
       try:
           # Request the file from the URL
