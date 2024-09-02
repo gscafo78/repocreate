@@ -29,7 +29,7 @@ class RepositoryManage:
                       self.downloader.download_file,
                       f"{self.args.proto}://{common_path}",
                       f"{self.args.rootpath}/{common_path}",
-                      True
+                      "True"
                   ))
 
               for component in self.args.components:
@@ -42,7 +42,7 @@ class RepositoryManage:
                           self.downloader.download_file,
                           f"{self.args.proto}://{common_path}",
                           f"{self.args.rootpath}/{common_path}",
-                          True
+                          "True"
                       ))
                       self.downloader.download_directory(f"{self.args.url}/{self.args.inpath}/dists/{distribution}/{component}/binary-{arch}/")
                       self.downloader.download_directory(f"{self.args.url}/{self.args.inpath}/dists/{distribution}/{component}/debian-installer/binary-{arch}/")
