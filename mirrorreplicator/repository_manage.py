@@ -57,16 +57,24 @@ class RepositoryManage:
                           logging.debug(f"Version: {package.get('Version')}")
                           logging.debug(f"Description: {package.get('Description')}")
                           logging.debug(f"Filename: {package.get('Filename')}")
+                          logging.debug(f"SHA256: {package.get('SHA256')}")
                           downloadlink = f"{self.args.proto}://{self.args.url}/{self.args.inpath}/{package.get('Filename')}"
                           filesave = f"{self.args.rootpath}/{self.args.url}/{self.args.inpath}/{package.get('Filename')}"
                           link_list.append(filesave)
-                          futures.append(executor.submit(
-                              self.downloader.download_file,
-                              downloadlink,
-                              filesave,
-                              False
-                          ))
-
+                          if self.args.hash:
+                                futures.append(executor.submit(
+                                    self.downloader.download_file,
+                                    downloadlink,
+                                    filesave,
+                                    package.get('SHA256'),
+                                ))
+                          else:
+                                futures.append(executor.submit(
+                                    self.downloader.download_file,
+                                    downloadlink,
+                                    filesave,
+                                ))
+        
       for future in as_completed(futures):
           future.result()
       logging.debug(f"Mirror cloned successfully.") 
