@@ -58,41 +58,6 @@ class Downloader:
           else:
               logging.error(f"An error occurred: {e}")
 
-#   def download_file(self, path, full_path, overwrite=False):
-#       folder = os.path.dirname(full_path)
-#       if not os.path.exists(folder):
-#           os.makedirs(folder, exist_ok=True)
-#           logging.debug(f"Created directory: {folder}")
-
-#       file_name = os.path.basename(full_path)
-#       if os.path.exists(full_path) and not overwrite:
-#           logging.debug(f"File '{file_name}' already exists. Skipping download.")
-#           self.skipped_count += 1
-#           return
-
-#       try:
-#           response = requests.get(path, stream=True)
-#           response.raise_for_status()
-#           total_size = int(response.headers.get('content-length', 0))
-#           with open(full_path, 'wb') as file, tqdm(
-#               desc=file_name,
-#               total=total_size,
-#               unit='B',
-#               unit_scale=True,
-#               unit_divisor=1024
-#           ) as bar:
-#               for chunk in response.iter_content(chunk_size=8192):
-#                   file.write(chunk)
-#                   bar.update(len(chunk))
-#           logging.debug(f"File '{file_name}' downloaded successfully.")
-#           self.downloaded_files.append(full_path)
-#           self.downloaded_count += 1
-#       except requests.exceptions.HTTPError as e:
-#           if response.status_code == 404:
-#               logging.error(f"Failed to download the file: {e}")
-#           else:
-#               logging.error(f"An error occurred: {e}")
-
   def download_file(self, path, full_path, hash_string=None):
       """
       Downloads a single file from the specified path.

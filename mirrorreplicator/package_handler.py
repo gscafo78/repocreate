@@ -1,5 +1,6 @@
 import lzma
 import gzip
+from datetime import datetime
 
 class PackageHandler:
   @staticmethod
@@ -40,7 +41,16 @@ class PackageHandler:
           with open(file_path, 'r') as file:
               data = file.read()
       
+      # Get the current date and time
+      current_time = datetime.now()
+
+      # Format the date and time
+      formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+      
       print(f"Extracted data from {file_path}")
+      print(f"Starting sync at {formatted_time}")
+
+
       return data
 
   @staticmethod
