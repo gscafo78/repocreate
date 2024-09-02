@@ -79,7 +79,7 @@ class Downloader:
             logging.debug(f"File '{file_name}' already exists. Skipping download.")
             self.skipped_count += 1  # Increment skipped count
             return
-          elif hash_string != " True" :
+          elif hash_string != "True" :
               logging.info(f"File '{file_name}' already exists but hash does not match. Overwriting.")
 
       try:
