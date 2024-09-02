@@ -3,6 +3,7 @@
 Repository Creator
 ====
 [![License: GPL](https://img.shields.io/badge/License-GPL-blue.svg)](https://github.com/gscafo78/repocreate/blob/main/LICENSE)
+![Python Version](https://img.shields.io/badge/Python-3.11.2-blue)
 
 Repository Creator is a script designed to download multiple Debian-like repositories, such as `deb.debian.org` and `archive.ubuntu.com`. It utilizes a JSON file to act as a database for storing the list of repositories.
 
