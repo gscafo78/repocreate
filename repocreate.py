@@ -10,13 +10,13 @@ from mirrorreplicator.repository_manage import RepositoryManage
 
 '''
 @author: Giovanni SCAFETTA
-@version: 0.0.5
+@version: 0.0.6
 @description: This script is realized to clone on line mirrors of a Debian/Ubuntu repository to create your local repository.
 @license: GLPv3
 '''
 
 
-VERSION = "0.0.5"
+VERSION = "0.0.6"
 FILE_NAME = "repocreate.json"
 PATH = os.path.dirname(os.path.abspath(__file__))
 FILE_PATH = f"{PATH}/{FILE_NAME}"
