@@ -191,7 +191,7 @@ class CLIHandler:
       self.group.add_argument("--edit", action='store_true', help="Edit repositories in the database")
       self.group.add_argument("--list", action='store_true', help="Show repositories in the database")
       self.group.add_argument("--run", action='store_true', help="Run the repositories mirroring")
-      self.parser.add_argument("--hash-chk", action='store_true', help="No SHA256 check for existing files")
+      self.parser.add_argument("--hash-chk", action='store_true', help="SHA256 check for existing files")
       self.parser.add_argument("--verbose", action='store_true', help="Verbose mode")
       self.parser.add_argument("--version", action='version', version=f"%(prog)s {VERSION}")
 
