@@ -15,6 +15,23 @@ class Downloader:
       self.downloaded_count = 0
       self.skipped_count = 0
 
+  
+  def is_file_size_equal(file_path, size_to_compare):
+    """
+    Check if the size of the file at file_path is equal to size_to_compare.
+
+    :param file_path: Path to the file
+    :param size_to_compare: Size to compare with the file size
+    :return: True if the file size is equal to size_to_compare, False otherwise
+    """
+    try:
+        file_size = os.path.getsize(file_path)
+        return file_size == int(size_to_compare)
+    except OSError as e:
+        print(f"Error accessing file: {e}")
+        return False
+    
+  
   def verify_file_hash(file_path, hash_string):
     """
     Verifies if the SHA-256 hash of the file matches the provided hash string.
@@ -58,7 +75,7 @@ class Downloader:
           else:
               logging.error(f"An error occurred: {e}")
 
-  def download_file(self, path, full_path, hash_string=None):
+  def download_file(self, path, full_path, hash_string=None, size=None):
       """
       Downloads a single file from the specified path.
 
@@ -75,15 +92,24 @@ class Downloader:
       file_name = os.path.basename(full_path)
       
       if os.path.exists(full_path) and hash_string != "True":
-          if hash_string is None:
+          if hash_string is None and size is None:
             logging.debug(f"File '{file_name}' already exists. Skipping download.")
             self.skipped_count += 1  # Increment skipped count
             return
-          if Downloader.verify_file_hash(full_path, hash_string):
+          
+          # Check if the file size is equal to the expected size
+          if size is not None and Downloader.is_file_size_equal(full_path, size):
+            logging.debug(f"Check SIZE of File '{file_name}' ok. Skipping download.")
+            self.skipped_count += 1  # Increment skipped count
+            return
+          elif size is not None:
+              logging.info(f"Check SIZE of '{file_name}' does not match. Overwriting.")
+
+          if hash_string is not None and Downloader.verify_file_hash(full_path, hash_string):
             logging.debug(f"Check HASH of File '{file_name}' ok. Skipping download.")
             self.skipped_count += 1  # Increment skipped count
             return
-          else:
+          elif hash_string is not None:
               logging.info(f"Check HASH of File '{file_name}' does not match. Overwriting.")
 
       try:
@@ -91,13 +117,27 @@ class Downloader:
           response = requests.get(path, stream=True)
           response.raise_for_status()
           total_size = int(response.headers.get('content-length', 0))
+          # Set up the progress bar
+          if len(full_path) > 100:
+              description = f"...{full_path[-97:]}"
+          else:
+              description = f"{full_path[-100:]}"
           with open(full_path, 'wb') as file, tqdm(
-              desc=file_name,
-              total=total_size,
-              unit='B',
-              unit_scale=True,
-              unit_divisor=1024
-          ) as bar:
+                    unit='B', 
+                    unit_scale=True, 
+                    desc=description, 
+                    total=total_size,
+                    unit_divisor=1024,
+                    bar_format="{desc:<100} {bar} [ {n_fmt:>5}/{total_fmt:>5} | {percentage:>6.2f} % | {rate_fmt:>8} ]",
+                    dynamic_ncols = True) as bar:
+        #       desc=file_name,
+        #       total=total_size,
+        #       unit='B',
+        #       unit_scale=True,
+        #       unit_divisor=1024
+        #   ) as bar:
+              
+
               for chunk in response.iter_content(chunk_size=8192):
                   file.write(chunk)
                   bar.update(len(chunk))

@@ -57,6 +57,7 @@ class RepositoryManage:
                           logging.debug(f"Version: {package.get('Version')}")
                           logging.debug(f"Description: {package.get('Description')}")
                           logging.debug(f"Filename: {package.get('Filename')}")
+                          logging.debug(f"Size: {package.get('Size')}")
                           logging.debug(f"SHA256: {package.get('SHA256')}")
                           downloadlink = f"{self.args.proto}://{self.args.url}/{self.args.inpath}/{package.get('Filename')}"
                           filesave = f"{self.args.rootpath}/{self.args.url}/{self.args.inpath}/{package.get('Filename')}"
@@ -73,6 +74,7 @@ class RepositoryManage:
                                     self.downloader.download_file,
                                     downloadlink,
                                     filesave,
+                                    size=package.get('Size')
                                 ))
         
       for future in as_completed(futures):

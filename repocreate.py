@@ -140,10 +140,14 @@ class RepositoryManager:
           print(f"Data has been written to {self.file_path}")
 
 class MirrorRunner:
-  def __init__(self, file_path, verbose=False, nochk=False):
+  def __init__(self, file_path, 
+               verbose=False, 
+               hash_chk=False,
+               ):
+      
       self.file_path = file_path
       self.verbose = verbose
-      self.nochk = nochk
+      self.hash_chk = hash_chk
 
   def parse_json_to_args(self, json_data):
       json_data.pop("active", None)
@@ -160,7 +164,7 @@ class MirrorRunner:
       json_data["verbose"] = self.verbose
       json_data["threads"] = 5
       json_data["remove"] = False
-      json_data["hash"] = not self.nochk
+      json_data["hash"] = self.hash_chk
 
 
       args = argparse.Namespace(**json_data)
@@ -187,7 +191,7 @@ class CLIHandler:
       self.group.add_argument("--edit", action='store_true', help="Edit repositories in the database")
       self.group.add_argument("--list", action='store_true', help="Show repositories in the database")
       self.group.add_argument("--run", action='store_true', help="Run the repositories mirroring")
-      self.parser.add_argument("--nochk", action='store_true', help="No SHA256 check for existing files")
+      self.parser.add_argument("--hash-chk", action='store_true', help="No SHA256 check for existing files")
       self.parser.add_argument("--verbose", action='store_true', help="Verbose mode")
       self.parser.add_argument("--version", action='version', version=f"%(prog)s {VERSION}")
 
@@ -202,7 +206,7 @@ class CLIHandler:
       Utilities.setup_logging(args.verbose)
 
       repo_manager = RepositoryManager(file_path)
-      mirror_runner = MirrorRunner(file_path, args.verbose, args.nochk)
+      mirror_runner = MirrorRunner(file_path, args.verbose, args.hash_chk)
 
       actions = {
           "add": repo_manager.add_data,
