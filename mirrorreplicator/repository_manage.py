@@ -35,6 +35,7 @@ class RepositoryManage:
               for component in self.args.components:
                   self.downloader.download_directory(f"{self.args.url}/{self.args.inpath}/dists/{distribution}/{component}/i18n/")
                   self.downloader.download_directory(f"{self.args.url}/{self.args.inpath}/dists/{distribution}/{component}/source/")
+                  self.downloader.download_directory(f"{self.args.url}/{self.args.inpath}/dists/{distribution}/{component}/cnf/")
 
                   for arch in self.args.architectures:
                       common_path = f"{self.args.url}/{self.args.inpath}/dists/{distribution}/{component}/Contents-{arch}.gz"
@@ -46,7 +47,6 @@ class RepositoryManage:
                       ))
                       self.downloader.download_directory(f"{self.args.url}/{self.args.inpath}/dists/{distribution}/{component}/binary-{arch}/")
                       self.downloader.download_directory(f"{self.args.url}/{self.args.inpath}/dists/{distribution}/{component}/debian-installer/binary-{arch}/")
-                      
                       save_path = f"{self.args.rootpath}/{self.args.url}/{self.args.inpath}/dists/{distribution}/{component}/binary-{arch}/"
                       pack_files = FileManager.list_files_in_folder(save_path)
                       packages_info = PackageHandler.find_and_extract_packages(pack_files)
