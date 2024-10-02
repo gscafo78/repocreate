@@ -22,7 +22,8 @@ To use the Repository Creator script, follow these steps:
    ```bash
    docker run -d \
         -v /folder/to/save/repositories:/repository \
-        -e CRON="* * * * *" 4ss078/repocreate
+        -e CRON="* * * * *" \
+        4ss078/repocreate
    ```
 3. Show the json file.
    ```bash
