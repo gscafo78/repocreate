@@ -1,0 +1,72 @@
+[
+    {
+        "proto": "https",
+        "url": "security.debian.org",
+        "inpath": "debian-security",
+        "distributions": "bookworm-security",
+        "components": "main contrib non-free non-free-firmware",
+        "architectures": "amd64",
+        "rootpath": "/repository",
+        "active": true
+    },
+    {
+        "proto": "https",
+        "url": "deb.debian.org",
+        "inpath": "debian",
+        "distributions": "bookworm bookworm-updates bookworm-proposed-updates bookworm-backports bookworm-backports-sloppy",
+        "components": "main contrib non-free non-free-firmware",
+        "architectures": "amd64",
+        "rootpath": "/repository",
+        "active": true
+    },
+    {
+        "proto": "http",
+        "url": "archive.ubuntu.com",
+        "inpath": "ubuntu",
+        "distributions": "noble noble-updates noble-security noble-backports jammy jammy-updates jammy-security jammy-backports focal focal-updates focal-security focal-backports",
+        "components": "main multiverse restricted universe",
+        "architectures": "amd64 i386",
+        "rootpath": "/repository",
+        "active": true
+    },
+    {
+        "proto": "https",
+        "url": "repo.zabbix.com/zabbix/7.0",
+        "inpath": "debian",
+        "distributions": "bookworm",
+        "components": "main",
+        "architectures": "amd64",
+        "rootpath": "/repository",
+        "active": true
+    },
+    {
+        "proto": "https",
+        "url": "download.docker.com",
+        "inpath": "linux/debian",
+        "distributions": "bookworm",
+        "components": "stable",
+        "architectures": "amd64",
+        "rootpath": "/repository",
+        "active": true
+    },
+    {
+        "proto": "https",
+        "url": "packages.microsoft.com",
+        "inpath": "repos/microsoft-debian-bookworm-prod",
+        "distributions": "bookworm",
+        "components": "main",
+        "architectures": "amd64",
+        "rootpath": "/repository",
+        "active": true
+    },
+    {
+        "proto": "http",
+        "url": "security.ubuntu.com",
+        "inpath": "ubuntu",
+        "distributions": "noble-security jammy-security focal-security",
+        "components": "main restricted universe multiverse",
+        "architectures": "amd64 i386",
+        "rootpath": "/repository",
+        "active": true
+    }
+]

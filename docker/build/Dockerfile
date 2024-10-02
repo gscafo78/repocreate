@@ -5,7 +5,7 @@ FROM python:3.9.20-alpine3.19
 LABEL maintainer="Giovanni Scafetta <giovanni.scafetta@gmx.com>"
 
 # Install dependencies
-RUN apk update && apk add --no-cache gcc musl-dev libffi-dev git bash cron
+RUN apk update && apk add --no-cache gcc musl-dev libffi-dev git bash dcron
 
 # Clone the Git repository
 RUN git clone https://github.com/gscafo78/repocreate.git /data
@@ -13,8 +13,9 @@ RUN git clone https://github.com/gscafo78/repocreate.git /data
 # Set the working directory to the cloned repository
 WORKDIR /data
 
-# COPY *.cfg /opt
-COPY ./*.json /tmp
+COPY ./repocreate.json /data/repocreate.json
+
+RUN mkdir /repository
 
 COPY ./entrypoint.sh /entrypoint.sh
 
