@@ -5,13 +5,13 @@ FROM python:3.9.20-alpine3.19
 LABEL maintainer="Giovanni Scafetta <giovanni.scafetta@gmx.com>"
 
 # Install dependencies
-RUN apk update && apk add --no-cache gcc musl-dev libffi-dev git bash
+RUN apk update && apk add --no-cache gcc musl-dev libffi-dev git bash cron
 
 # Clone the Git repository
-RUN git clone https://github.com/gscafo78/repocreate.git /app/repo
+RUN git clone https://github.com/gscafo78/repocreate.git /data
 
 # Set the working directory to the cloned repository
-WORKDIR /app/repo
+WORKDIR /data
 
 # COPY *.cfg /opt
 COPY ./*.json /tmp
