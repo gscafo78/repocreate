@@ -7,7 +7,7 @@ if [ -z "$CRON" ]; then
 fi
 
 # Create the crontab file dynamically
-echo "$CRON python /repocreate.py --run > /var/log/cron.log 2>&1" > /etc/crontabs/root
+echo "$CRON python /data/repocreate.py --run > /var/log/cron.log 2>&1" > /etc/crontabs/root
 
 # Ensure the log file exists
 touch /var/log/cron.log

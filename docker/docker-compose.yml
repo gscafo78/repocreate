@@ -1,18 +1,17 @@
 services:
   repocreate:
     build:
-      context: ./build
-      dockerfile: dockerfile
+      context: ./build/
+      dockerfile: Dockerfile  # Ensure this matches the actual file name
     image: 4ss078/repocreate:latest
     environment:
-      - CRON="0 22 * * *"
+      - CRON=0 22 * * *  # No quotes needed unless the value contains special characters
     restart: unless-stopped
     volumes:
-      -/path/repocreate/:/repository
+      - /opt/autofs/mirror/apt-mirror/mirror:/repository  # Ensure space after the hyphen
     networks:
       - repocreate_network
 
 networks:
   repocreate_network:
     driver: bridge
-
