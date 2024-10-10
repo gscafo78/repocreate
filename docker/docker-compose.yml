@@ -1,0 +1,18 @@
+services:
+  repocreate:
+    build:
+      context: ./build
+      dockerfile: dockerfile
+    image: 4ss078/repocreate:latest
+    environment:
+      - CRON="0 22 * * *"
+    restart: unless-stopped
+    volumes:
+      -/path/repocreate/:/repository
+    networks:
+      - repocreate_network
+
+networks:
+  repocreate_network:
+    driver: bridge
+

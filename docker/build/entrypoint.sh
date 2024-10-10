@@ -1,13 +1,5 @@
 #!/bin/sh
 
-# # Move configuration files if they exist in /tmp
-# if [ -f "/tmp/repocreate.json" ] ; then
-#     mv /tmp/repocreate.json /data/repocreate.json
-# else
-#     echo "Missing configuration files in /tmp"
-#     exit 1
-# fi
-
 # Check if the CRON environment variable is set
 if [ -z "$CRON" ]; then
   echo "CRON is not set. Exiting."
