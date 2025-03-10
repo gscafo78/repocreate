@@ -13,7 +13,7 @@ RUN git clone https://github.com/gscafo78/repocreate.git /data
 # Set the working directory to the cloned repository
 WORKDIR /data
 
-COPY ./repocreate.json /data/repocreate.json
+COPY ./repocreate_template.json /repocreate_template.json
 
 RUN mkdir /repository
 
@@ -23,6 +23,8 @@ RUN chmod +x /entrypoint.sh
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
+
+VOLUME [ "/data" ]
 
 # Set the entry point
 ENTRYPOINT ["/entrypoint.sh"]
