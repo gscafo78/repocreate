@@ -9,9 +9,9 @@ services:
     restart: unless-stopped
     volumes:
       - /opt/autofs/mirror/apt-mirror/mirror:/repository  # Ensure space after the hyphen
+      - /opt/repocreate/repocreate.json:/data/repocreate.json:ro
     networks:
       - repocreate_network
-
 networks:
   repocreate_network:
     driver: bridge
