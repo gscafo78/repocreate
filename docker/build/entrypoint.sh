@@ -10,6 +10,12 @@ if [ -z "$CRON" ]; then
   exit 1
 fi
 
+# Set -e to exit immediately if a command exits with a non-zero status.
+set -e
+
+# Create the /etc/crontabs directory (if it doesn't exist)
+mkdir -p /etc/crontabs
+
 # Create the crontab file dynamically
 echo "$CRON python /data/repocreate.py --run > /var/log/cron.log 2>&1" > /etc/crontabs/root
 
