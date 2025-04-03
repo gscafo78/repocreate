@@ -4,6 +4,7 @@ services:
       context: ./build/
       dockerfile: Dockerfile  # Ensure this matches the actual file name
     image: 4ss078/repocreate:local
+    container_name: repocreate
     environment:
       - CRON=0 22 * * *  # No quotes needed unless the value contains special characters
     restart: unless-stopped
