@@ -26,7 +26,7 @@ echo "0 0 */7 * * echo '' > /var/log/cron.log" >> /etc/crontabs/root
 touch /var/log/cron.log
 
 # Start the cron daemon
-crond
+cron
 
 # Tail the log file to show output
 tail -f /var/log/cron.log
